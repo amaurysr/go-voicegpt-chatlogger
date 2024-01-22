@@ -11,10 +11,6 @@ import (
 )
 
 func audiorecord() {
-	if len(os.Args) < 2 {
-		fmt.Println("missing required argument: output file name")
-		return
-	}
 	fmt.Println("Recording. Press Ctrl-C to stop.")
 
 	err := microphone.Init()
@@ -31,7 +27,7 @@ func audiorecord() {
 	// closed explicitly.
 	defer stream.Close()
 
-	filename := os.Args[1]
+	filename := "file"
 	if !strings.HasSuffix(filename, ".wav") {
 		filename += ".wav"
 	}

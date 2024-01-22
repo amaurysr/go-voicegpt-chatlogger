@@ -3,13 +3,23 @@ package open_ai
 import (
         "bufio"
         "fmt"
+	"log"
         "os"
         "context"
         openai "github.com/sashabaranov/go-openai"
 )
  
-func OpenAI_Auth(input string){
-        client := openai.NewClient(input)
+func Input()string{
+        scanner := bufio.NewScanner(os.Stdin)
+        fmt.Printf("Enter your openAI secret key: ")
+        scanner.Scan()
+	fmt.Printf("\n")
+        input := scanner.Text()
+	return input
+}
+
+func OpenAI_chatGPT(){
+        client := openai.NewClient(Input())
         resp, err := client.CreateChatCompletion(
                 context.Background(),
                 openai.ChatCompletionRequest{
@@ -30,11 +40,23 @@ func OpenAI_Auth(input string){
         
 }
 
-func Run(){
-        scanner := bufio.NewScanner(os.Stdin)
-        fmt.Printf("Enter your openAI secret key: ")
-        scanner.Scan()
-        input := scanner.Text()
-        OpenAI_Auth(input)
-}
+func OpenAI_Whisper(){
+	client := openai.NewClient(Input())
+	resp, err := client.CreateTranscription(
+		context.Background(),
+		openai.AudioRequest{
+			Model:    openai.Whisper1,
+			FilePath: "file.wav",
+		},
+	)
+	if err != nil {
+		fmt.Printf("Transcription error: %v\n", err)
+		return
+	}
+	e := os.Remove("file.wav")
+	if e != nil{
+		log.Fatal(e)
+	}
+	fmt.Println(resp.Text)
 
+}
