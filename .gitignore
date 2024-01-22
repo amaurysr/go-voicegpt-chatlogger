@@ -1,2 +1,4 @@
 *pseudo
 *.pseudo
+*pseudo.md 
+*.main.go.swp
